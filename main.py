@@ -1,9 +1,98 @@
 import json
 import os
 import time
+import random
 import Sunny as SyNet
 import sqlite3
+from datetime import datetime
 
+
+# 验证函数
+def yanzheng():
+    # 定义字符映射表
+    codeMap = {"fc":"[re]","ep":"[Af]","rj":"[M_]","sp":"[sW]","ws":"[Pj]","mb":"[^~]","ww":"[Dp]","wh":"[ZH]","ph":"[b+]","hk":"[3b]","mc":"[%)]","fm":"[$4]","nm":"[T!]","ei":"[J3]","pd":"[(A]","ef":"[%t]","xf":"[n_]","na":"[W6]","mr":"[dn]","km":"[b*]","aw":"[#*]","sj":"[~6]","ry":"[t#]","sd":"[$R]","eh":"[!!]","wp":"[TE]","fy":"[s6]","ex":"[EE]","ce":"[PS]","xr":"[~z]","cj":"[xh]","am":"[(G]","kw":"[Nr]","hj":"[p@]","ia":"[jO]","mp":"[75]","py":"[6C]","hc":"[46]","sk":"[(8]","hp":"[SB]","my":"[pq]","wk":"[Xd]","bk":"[Q^]","ak":"[)J]","cw":"[ai]","ym":"[Te]","yh":"[Cd]","xb":"[R5]","yy":"[#H]","nt":"[4)]","bc":"[#J]","fe":"[2+]","ni":"[f@]","bb":"[!k]","jc":"[$Q]","an":"[m$]","ee":"[RH]","nn":"[n$]","jr":"[5F]","pp":"[JQ]","fx":"[86]","2":"[)h]","3":"[iL]","4":"[r2]","5":"[Ys]","6":"[7p]","7":"[!5]","8":"[@A]","A":"[_W]","B":"[Kt]","C":"[m#]","D":"[A!]","E":"[M!]","F":"[xG]","G":"[k@]","H":"[_!]","J":"[rP]","K":"[z#]","M":"[r$]","N":"[rN]","P":"[t$]","Q":"[3(]","R":"[fF]","S":"[H)]","T":"[J@]","W":"[83]","X":"[t5]","Y":"[T_]","Z":"[CT]","a":"[Jt]","b":"[Ks]","c":"[yn]","d":"[2r]","e":"[#2]","f":"[yM]","h":"[)m]","i":"[mx]","j":"[YV]","k":"[$j]","m":"[Xy]","n":"[Bk]","p":"[5$]","r":"[EH]","s":"[Pw]","t":"[j(]","w":"[p7]","x":"[a+]","y":"[B2]","z":"[4n]","~":"[~C]","!":"[iw]","@":"[SK]","#":"[Pf]","$":"[de]","%":"[3t]","^":"[H_]","&":"[WA]","*":"[!A]","(":"[z*]",")":"[)n]","_":"[&k]","+":"[*F]","{":"[3k]",'"':"[t]",":":"[j7]","}":"[8u]","0":"[2]","1":"[k6]"}
+
+
+    # 随机数生成函数
+    def random_num(min_num, max_num):
+        return random.randint(min_num, max_num)
+
+    # 替换函数
+    def owo_replace_all(string, s1, s2):
+        while s1 in string:
+            string = string.replace(s1, s2)
+        return string
+
+    # 解码函数
+    def owo_decode(item_str):
+        for item in codeMap:
+            item_str = owo_replace_all(item_str, codeMap[item], item)
+        while ']' in item_str:
+            item_str = owo_decode(item_str)
+        return item_str
+
+    # 文件存储与读取函数
+    def read_from_file(filename):
+        if os.path.exists(filename):
+            with open(filename, 'r') as file:
+                return file.read()
+        return None
+
+    def write_to_file(filename, content):
+        with open(filename, 'w') as file:
+            file.write(content)
+    owomm = read_from_file('owomm.txt')
+    if owomm and (len(owomm) > 20):
+        try:
+            data = owo_decode(owomm)
+            data = json.loads(data)
+            if data['time'] > int(time.time() * 1000):
+                # print('登陆成功')
+                return True
+        except Exception as error:
+            write_to_file("owomm.txt", "")
+    sqm = read_from_file('owomm.txt')
+    if not sqm:
+        sqm = str(random_num(1000, 9999))
+        write_to_file('owomm.txt', sqm)
+    res_input = input(f'您是ID为[{sqm}]，请向客服索要密码:')
+    if res_input:
+        # 判断是否是离线码
+        if len(res_input) > 30:
+            data = owo_decode(res_input)
+            data = json.loads(data)
+            if data['time'] > int(time.time() * 1000) and sqm == data['code']:
+                print('使用成功')
+                write_to_file("owomm.txt", res_input)
+                return True
+        else:
+            import requests
+            headers = {
+                "Content-Type": "application/json"
+            }
+            payload = json.dumps({"path": "cdk/" + res_input})
+            response = requests.post(
+                "https://service-hnqivk8b-1251887489.sh.apigw.tencentcs.com/release/read", 
+                headers=headers, data=payload
+            )
+            result = response.text
+            if result == 'Fail':
+                print('密码错误')
+                return False
+            
+            data = owo_decode(result)
+            # print(data)
+            data = json.loads(data)
+            if data['time'] > int(time.time() * 1000) and sqm == data['code']:
+                print('使用成功')
+                write_to_file("owomm.txt", result)
+                return True
+
+    return False
+
+
+if (not yanzheng()):
+    exit()
 
 def BytesToStr(b):
     """ 将字节数组转为字符串 """
