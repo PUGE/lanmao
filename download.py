@@ -5,7 +5,9 @@ import subprocess
 import requests
 conn = sqlite3.connect('list.db')
 cursor = conn.cursor()
+fileInd = 0
 def downMp4(url,title):
+    global fileInd
     try:
         #url编码，防止url中存在特殊字
 
@@ -14,7 +16,8 @@ def downMp4(url,title):
         #如果不存在mp4目录，则创建
         if not os.path.exists("./mp4"):
             os.mkdir("./mp4")
-        with open("./mp4/"+str(title)+".mp4", "wb") as f:
+        fileInd += 1
+        with open("./mp4/" + str(fileInd) + '-' +str(title)+".mp4", "wb") as f:
             for chunk in res.iter_content(chunk_size=1024):
                 if chunk:
                     f.write(chunk)
