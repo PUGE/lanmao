@@ -41,7 +41,7 @@ def yanzheng():
     def write_to_file(filename, content):
         with open(filename, 'w') as file:
             file.write(content)
-    owomm = read_from_file('owomm.txt')
+    owomm = read_from_file('C:\WINDOWS\Temp\owomm.txt')
     if owomm and (len(owomm) > 20):
         try:
             data = owo_decode(owomm)
@@ -50,11 +50,11 @@ def yanzheng():
                 # print('登陆成功')
                 return True
         except Exception as error:
-            write_to_file("owomm.txt", "")
-    sqm = read_from_file('owomm.txt')
+            write_to_file("C:\WINDOWS\Temp\owomm.txt", "")
+    sqm = read_from_file('C:\WINDOWS\Temp\owomm.txt')
     if not sqm:
         sqm = str(random_num(1000, 9999))
-        write_to_file('owomm.txt', sqm)
+        write_to_file('C:\WINDOWS\Temp\owomm.txt', sqm)
     res_input = input(f'您是ID为[{sqm}]，请向客服索要密码:')
     if res_input:
         # 判断是否是离线码
@@ -63,7 +63,7 @@ def yanzheng():
             data = json.loads(data)
             if data['time'] > int(time.time() * 1000) and sqm == data['code']:
                 print('使用成功')
-                write_to_file("owomm.txt", res_input)
+                write_to_file("C:\WINDOWS\Temp\owomm.txt", res_input)
                 return True
         else:
             import requests
@@ -85,7 +85,7 @@ def yanzheng():
             data = json.loads(data)
             if data['time'] > int(time.time() * 1000) and sqm == data['code']:
                 print('使用成功')
-                write_to_file("owomm.txt", result)
+                write_to_file("C:\WINDOWS\Temp\owomm.txt", result)
                 return True
 
     return False
@@ -353,7 +353,7 @@ class Callback:
 
 
 # print("SunnyNet DLL版本：" + SyNet.GetSunnyVersion());
-
+print('作者qq:1310384434 微信: hju201314 ')
 # ↓↓↓↓ 使用Sunny中间件 ↓↓↓↓
 Sunny = SyNet.SunnyNet()
 Sunny.绑定端口(2024)
