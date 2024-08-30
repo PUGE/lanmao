@@ -49,6 +49,9 @@ def yanzheng():
             if data['time'] > int(time.time() * 1000):
                 # print('登陆成功')
                 return True
+            else:
+                sqm = str(random_num(1000, 9999))
+                write_to_file('C:\WINDOWS\Temp\owomm.txt', sqm)
         except Exception as error:
             write_to_file("C:\WINDOWS\Temp\owomm.txt", "")
     sqm = read_from_file('C:\WINDOWS\Temp\owomm.txt')
